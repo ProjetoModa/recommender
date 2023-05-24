@@ -72,20 +72,23 @@ class QuadTree:
             raise Exception("sample size must be multiple of 4")
         points = []
         for child in self.root.children:
-            points += self.search(child, sample_size/4)
+            points += self.sample(child, sample_size//4)
         indexes = [point.idx for point in points]
         selected = self.data.loc[indexes, :]
         return selected['name'].values.tolist()
     
-    def search(self, region: Rect, n):
+    def sample(self, region: Rect, n):
+        samples = []
+        for _ in range(n):
+            samples.append(self.search(region))
+        return samples
+    
+    def search(self, region: Rect):
         if len(region.children) == 0:
-            return random.sample(region.points, min(n, len(region.points)))
+            return random.choice(region.points)
         
-        points = []
         for child in random.sample(region.children, len(region.children)):
-            if n > 0:
-                sample = self.search(child, n)
-                points += sample
-                n -= len(sample)
+            if len(child.points) > 0:
+                return self.search(child)
             
-        return points
+        return None
