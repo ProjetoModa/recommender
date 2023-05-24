@@ -1,0 +1,6 @@
+Flask
+Flask-cors
+Flask-SQLAlchemy
+mysql-connector-python
+python-dotenv
+pandas
