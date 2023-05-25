@@ -8,8 +8,8 @@ class Region:
         self.y_middle = (y_max + y_min)/2
         self.points = points
         self.children = []
-
-    def count(self):
+        
+    def __len__(self):
         return len(self.points)
     
     def select_quad(self, quad):

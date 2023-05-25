@@ -21,7 +21,7 @@ class QuadTree:
         return points
 
     def create_tree(self, region: Region, depth=0):
-        if region.count() <= self.max_points or depth >= self.max_depth:
+        if len(region) <= self.max_points or depth >= self.max_depth:
             return
         
         for i in range(4):
@@ -31,19 +31,32 @@ class QuadTree:
             self.create_tree(child, depth+1)
 
     def select(self, sample_size):
-        if sample_size % 4 != 0:
-            raise Exception("sample size must be multiple of 4")
+        
+        sample_size = min(sample_size, len(self.root))
+        
         points = []
         for child in self.root.children:
-            points += self.sample(child, sample_size//4)
+            points += self.sample(child, min(sample_size//4, len(child)))
+        
+        while len(points) < sample_size:
+            point = self.search(self.root)
+            if point not in points:
+                points.append(point)
+        
         indexes = [point.idx for point in points]
         selected = self.data.loc[indexes, :]
         return selected['name'].values.tolist()
     
     def sample(self, region: Region, n):
         samples = []
-        for _ in range(n):
-            samples.append(self.search(region))
+        for child in region.children:
+            samples += self.sample(child, min(n//4, len(child)))
+            
+        while len(samples) < n:
+            point = self.search(self.root)
+            if point not in samples:
+                samples.append(point)
+                
         return samples
     
     def search(self, region: Region):
