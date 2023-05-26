@@ -34,5 +34,10 @@ def create_app():
     def recomm():
         state = request.json.get('state')
         return jsonify({"products": recommender.recommend(state)})
+    
+    @app.route('/entropy', methods=['GET','POST'])
+    def entropy():
+        state = request.json.get('state')
+        return jsonify({"entropy": recommender.entropy(state)})
         
     return app

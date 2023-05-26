@@ -1,11 +1,13 @@
 from .consts import TAMANHO_MINIMO_SVM
 from .quadtree import QuadTree
 from .svm import SVM
+from .entropy import EntropyCalculator
 from pandas import DataFrame
 
 class Recommender:
     def __init__(self, sample_size=12):
         self.sample_size = sample_size
+        self.entropy_calculator = EntropyCalculator()
 
     def init_app(self, data):
         self.data = data
@@ -36,3 +38,9 @@ class Recommender:
     def recommend_random(self, filtered: DataFrame):
         qt = QuadTree(filtered)
         return qt.select(self.sample_size)
+    
+    def entropy(self, state):
+        filtered = self.filter_slots(state['slots'])
+        liked = filtered[filtered['name'].isin(state['liked'])]
+        filtered = filtered[~filtered['name'].isin(liked['name'])]
+        self.entropy_calculator.calculate(state, filtered)
