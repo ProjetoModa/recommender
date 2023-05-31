@@ -18,7 +18,8 @@ class Recommender:
     def filter_slots(self, slots):
         df = self.data.copy()
         for key in slots:
-            df = df[df[key].isin(slots[key])]
+            if len(slots[key]) > 0:
+                df = df[df[key].isin(slots[key])]
         return df
 
     def recommend(self, state):
@@ -43,4 +44,4 @@ class Recommender:
         filtered = self.filter_slots(state['slots'])
         liked = filtered[filtered['name'].isin(state['liked'])]
         filtered = filtered[~filtered['name'].isin(liked['name'])]
-        self.entropy_calculator.calculate(state, filtered)
+        return self.entropy_calculator.calculate(filtered)
