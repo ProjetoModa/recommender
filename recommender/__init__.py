@@ -11,16 +11,17 @@ class Recommender:
         self.entropy_calculator = EntropyCalculator()
 
     def init_app(self, data: DataFrame):
-        self.data = pd.get_dummies(data, columns=["type", "fabric", "pattern", "size", "color"], dtype=float)
+        self.data = data
+        self.one_hot = pd.get_dummies(data, columns=["type", "fabric", "pattern", "size", "color"], dtype=float)
 
     def getData(self):
         return self.data.to_json()
 
     def filter_slots(self, slots):
-        df = self.data.copy()
+        df = self.one_hot.copy()
         for key in slots:
             if len(slots[key]) > 0:
-                df = df.loc[df[key].isin(slots[key])]
+                df = df.loc[self.data[key].isin(slots[key])]
         return df
 
     def recommend(self, state):

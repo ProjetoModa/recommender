@@ -46,7 +46,7 @@ class SVM:
 
     def select(self, sample_size):
         classified = self.df
-        classified['cuts'] = pd.qcut(classified['class'], q=4, labels=[
+        classified['cuts'] = pd.qcut(classified['class'].rank(method="first"), q=4, labels=[
                                      'lower', 'mid-low', 'mid-high', 'upper'])
 
         positive = self.calculate_prob(
