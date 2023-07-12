@@ -17,15 +17,15 @@ class Recommender:
     def getData(self):
         return self.data.to_json()
 
-    def filter_slots(self, slots):
-        df = self.one_hot.copy()
+    def filter_slots(self, data, slots):
+        df = data.copy()
         for key in slots:
             if len(slots[key]) > 0:
                 df = df.loc[self.data[key].isin(slots[key])]
         return df
 
     def recommend(self, state):
-        filtered = self.filter_slots(state['slots'])
+        filtered = self.filter_slots(self.one_hot, state['slots'])
         liked = filtered.loc[filtered['name'].isin(state['liked'])]
         liked["class"] = 1
         
@@ -43,7 +43,7 @@ class Recommender:
         return qt.select(self.sample_size)
     
     def entropy(self, state):
-        filtered = self.filter_slots(state['slots'])
+        filtered = self.filter_slots(self.data, state['slots'])
         liked = filtered[filtered['name'].isin(state['liked'])]
         filtered = filtered[~filtered['name'].isin(liked['name'])]
         return self.entropy_calculator.calculate(filtered)
