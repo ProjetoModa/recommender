@@ -15,17 +15,26 @@ class Region:
     def select_quad(self, quad):
         points = []
         bounds = None
+
         if quad == 0:
             bounds = [self.x_middle, self.y_middle, self.x_max, self.y_max]
+            for point in self.points:
+                if point.x > self.x_middle and point.y > self.y_middle:
+                    points.append(point)
         elif quad == 1:
             bounds = [self.x_min, self.y_middle, self.x_middle, self.y_max]
+            for point in self.points:
+                if point.x <= self.x_middle and point.y > self.y_middle:
+                    points.append(point)
         elif quad == 2:
             bounds = [self.x_min, self.y_min, self.x_middle, self.y_middle]
+            for point in self.points:
+                if point.x <= self.x_middle and point.y <= self.y_middle:
+                    points.append(point)
         else:
             bounds = [self.x_middle, self.y_min, self.x_max, self.y_middle]
-        
-        for point in self.points:
-            if bounds[0] <= point.x < bounds[2] and bounds[1] <= point.y < bounds[3]:
-                points.append(point)
+            for point in self.points:
+                if point.x > self.x_middle and point.y <= self.y_middle:
+                    points.append(point)
                 
         return Region(bounds[0], bounds[1], bounds[2], bounds[3], points)
