@@ -28,4 +28,4 @@ class Region:
             if bounds[0] <= point.x < bounds[2] and bounds[1] <= point.y < bounds[3]:
                 points.append(point)
                 
-        return Region(*bounds, points)
+        return Region(bounds[0], bounds[1], bounds[2], bounds[3], points)
