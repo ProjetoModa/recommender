@@ -36,24 +36,18 @@ class QuadTree:
         
         points = []
         for child in self.root.children:
-            points += self.sample(child, min(sample_size//4, len(child)))
+            self.sample(child, min(sample_size//4, len(child)), points)
         
-        while len(points) < sample_size:
-            point = self.search(self.root)
-            if point not in points:
-                points.append(point)
+        self.sample(self.root, sample_size - len(points), points)
         
         indexes = [point.idx for point in points]
         selected = self.data.loc[indexes, :]
         return selected['name'].values.tolist()
     
-    def sample(self, region: Region, n):
-        samples = []
-        for child in region.children:
-            samples += self.sample(child, min(n//4, len(child)))
+    def sample(self, region: Region, n, samples):
             
         while len(samples) < n:
-            point = self.search(self.root)
+            point = self.search(region)
             if point not in samples:
                 samples.append(point)
                 
