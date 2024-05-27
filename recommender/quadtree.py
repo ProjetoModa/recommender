@@ -52,7 +52,9 @@ class QuadTree:
         selected = self.data.loc[indexes, :]
         return selected['name'].values.tolist()
 
-    def sample(self, region: Region, n, samples=[]):
+    def sample(self, region: Region, n, samples=None):
+        if samples is None:
+            samples = []
 
         while len(samples) < n:
             point = self.search(region)
