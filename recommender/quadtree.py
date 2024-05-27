@@ -5,10 +5,10 @@ import random
 
 
 class QuadTree:
-    def __init__(self, data):
+    def __init__(self, data, max_points = 6, max_depth=10):
         self.data = data
-        self.max_points = 6
-        self.max_depth = 10
+        self.max_points = max_points
+        self.max_depth = max_depth
         self.root = Region(
             data['x'].min(),
             data['y'].min(),
@@ -17,6 +17,8 @@ class QuadTree:
             self._convert_points(data),
         )
         self.create_tree(self.root)
+    def __str__(self) -> str:
+        return str(self.root)
 
     def _convert_points(self, data):
         points = []

@@ -8,7 +8,10 @@ class Region:
         self.y_middle = (y_max + y_min)/2
         self.points = points
         self.children = []
-        
+    def __repr__(self):
+        return f"<Region min:{self.x_min},{self.y_min} middle:{self.x_middle},{self.y_middle} max:{self.x_max},{self.y_max} n:{len(self.points)}>"
+    def __str__(self) -> str:
+        return self.__repr__()
     def __len__(self):
         return len(self.points)
     
@@ -31,10 +34,12 @@ class Region:
             for point in self.points:
                 if point.x <= self.x_middle and point.y <= self.y_middle:
                     points.append(point)
-        else:
+        elif quad == 3:
             bounds = [self.x_middle, self.y_min, self.x_max, self.y_middle]
             for point in self.points:
                 if point.x > self.x_middle and point.y <= self.y_middle:
                     points.append(point)
+        else:
+            raise Exception("Quad invalid")
                 
         return Region(bounds[0], bounds[1], bounds[2], bounds[3], points)
